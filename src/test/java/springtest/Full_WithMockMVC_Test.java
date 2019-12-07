@@ -1,5 +1,6 @@
 package springtest;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class Full_WithMockMVC_Test {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @PostConstruct
+    @Before
     public void setup() {
         Utilisateur user = new Utilisateur();
         user.setEmail("toto");
