@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class Full_WithMockMVC_Test {
+public class Full_WithSpringBootTest_Test {
 
     @LocalServerPort
     private int port;
