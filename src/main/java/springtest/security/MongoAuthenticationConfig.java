@@ -25,7 +25,6 @@ public class MongoAuthenticationConfig extends AbstractMongoConfiguration {
     @Value("${mongo.port}")
     private int port;
 
-
     @Override
     public MongoClient mongoClient() {
         return new MongoClient(singletonList(new ServerAddress(ip, port)),
