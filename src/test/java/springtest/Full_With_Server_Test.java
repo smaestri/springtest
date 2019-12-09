@@ -13,12 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.context.WebApplicationContext;
+import springtest.model.Contact;
 import springtest.model.Utilisateur;
 
 import static org.junit.Assert.assertEquals;
-// cf. https://www.baeldung.com/spring-security-integration-tests
+// Articles that help me :
+// https://www.baeldung.com/spring-security-integration-tests
 // https://dzone.com/articles/spring-boot-with-embedded-mongodb
-//  https://stackoverflow.com/questions/42369467/use-embedded-database-for-test-in-spring-boot
+// https://stackoverflow.com/questions/42369467/use-embedded-database-for-test-in-spring-boot
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -42,18 +44,26 @@ public class Full_With_Server_Test {
 
     @Before
     public void setup() {
+        // save user who makes authentication
         Utilisateur user = new Utilisateur();
         user.setEmail("toto");
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String p = bCryptPasswordEncoder.encode("tutu");
         user.setPassword(p);
         mongoTemplate.save(user);
+
+        // save contact
+        Contact contact = new Contact();
+        contact.setAddress("adress2");
+        contact.setUserId("456");
+        mongoTemplate.save(contact);
+
     }
 
     @Test
-    public void testWithFrenchIsbn() throws Exception {
-        String forObject = testRestTemplate.withBasicAuth("toto", "tutu").getForObject("http://localhost:" + port + "/api/value", String.class);
-        assertEquals(forObject, "toto");
+    public void getUserAdress() {
+        String adress = testRestTemplate.withBasicAuth("toto", "tutu").getForObject("http://localhost:" + port + "/users/456", String.class);
+        assertEquals(adress, "adress2");
     }
 
 }

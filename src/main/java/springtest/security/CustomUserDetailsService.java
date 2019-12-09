@@ -1,5 +1,6 @@
 package springtest.security;
 
+import springtest.api.MongoUserRepository;
 import springtest.model.Utilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,13 +23,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
-        List<Utilisateur> users = mongoUserRepository.findByEmail(login);
+        Optional<Utilisateur> userAuthenticated = mongoUserRepository.findByEmail(login);
 
-        if (users == null || users.size() == 0) {
+        if (!userAuthenticated.isPresent()) {
             throw new UsernameNotFoundException(login);
         }
 
-        return new UserPrincipal(users.get(0));
+        return new UserPrincipal(userAuthenticated.get());
 
     }
 

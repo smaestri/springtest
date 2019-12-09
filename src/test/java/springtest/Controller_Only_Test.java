@@ -9,10 +9,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import springtest.api.ContactService;
 import springtest.api.MyController;
 import springtest.security.CustomUserDetailsService;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -30,14 +33,18 @@ public class Controller_Only_Test {
     @MockBean
     CustomUserDetailsService service;
 
+    @MockBean
+    ContactService contactService;
+
     @Test
     @WithMockUser // use with mockMvc only
     public void testController() throws Exception {
         // given
-        String param = "9782253066200";
+        String userId = "123";
+        when(contactService.getAdress(anyString())).thenReturn("myaddress");
 
-        // when then
-        mockMvc.perform(get("/api/" + param)).andExpect(content().string(containsString("toto")));
+        // when + then
+        mockMvc.perform(get("/users/" + userId)).andExpect(content().string(containsString("myaddress")));
 
     }
 

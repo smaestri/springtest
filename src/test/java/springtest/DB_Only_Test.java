@@ -1,16 +1,15 @@
 package springtest;
 
-import springtest.model.Utilisateur;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import springtest.security.MongoUserRepository;
+import springtest.api.MongoContactRespository;
+import springtest.model.Contact;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,24 +21,20 @@ public class DB_Only_Test {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private ApplicationContext appContext;
-
-    @Autowired
-    MongoUserRepository mongoUserRepository;
+    MongoContactRespository mongoContactRespository;
 
     @Test
-    public void testWithFrenchIsbn() throws Exception {
+    public void testWithFrenchIsbn() {
 
         // given
-        Utilisateur user = new Utilisateur();
-        user.setEmail("user@yopmail.com");
+        Contact contact = new Contact();
+        contact.setUserId("123");
+        contact.setAddress("address1");
+        mongoTemplate.save(contact);
 
-        // when
-        mongoTemplate.save(user);
-
-        // then
-        List<Utilisateur> all = mongoUserRepository.findByEmail("user@yopmail.com");
-        assertEquals(all.size(), 1);
+        // when + then
+        Optional<Contact> address = mongoContactRespository.findByUserId("123");
+        assertEquals(address.get().getAddress(), "address1");
 
     }
 
